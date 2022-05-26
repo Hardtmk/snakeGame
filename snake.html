@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>snake</title>
+ <link rel="stylesheet" href="snake.css">
+</head>
+<!-- 如何使增加自動地走在前面 -->
+ <!-- 只要向前/后/左/右移動,前面會增加,後面就會減少, -->
+ <!-- 如果遇到有食物的話,就不會移動,食物就會變成蛇的一部分-->
+ <!-- 只要撞到四邊的墻,就輸了 -->
+ <!-- 只要只要碰到自己的body 就輸了 -->
+ <!-- 吃了一個磚頭,就會增加一分 -->
+ <!-- 按了按鈕之後就開始或者重新開始 -->
+ <!-- 食物會隨時出現 -->
+ <!-- 一開始由少變多, 由變成5-->
+ <!-- 每一秒就向前移動一格 -->
+<body>
+ <button class="start">Start/Restart</button>
+ <div class="score"></div>
+ <!-- 得要container裏面有東西,變成grid才有意義 -->
+<div class="container">
+<!-- 是要一開始就增加,還是最後才增加比較好呢 -->
+
+</div>
+
+</body>
+<script>
+const start = document.querySelector('.start')
+const score = document.querySelector('.score')
+const container =  document.querySelector('.container')
+
+let x = 0
+// const timer = setInterval(function(){
+let y = 0 
+let timer1 
+let timer2
+let timer3
+let timer4
+let width = 25
+// },1000)
+
+  function maternal(a, b) {
+    return b - a
+  }
+  function instinct(a, b) {
+    return a-b
+  }
+
+for (var i =0; i<625; i++){
+  const index = document.createElement('div')
+  container.appendChild(index)
+}
+const indexs= Array.from(document.querySelectorAll('.container div'))
+const boxArray=[403,404,405,406]
+function appear(){
+for (var i=0; i<boxArray.length; i++){
+indexs[boxArray[i]].classList.add('box')
+}
+}
+appear()
+function remove(){
+for (var i=0; i<boxArray.length; i++){
+indexs[boxArray[i]].classList.remove('box')
+}
+}
+
+  const allBoxs = Array.from(document.querySelectorAll('.box'))
+let count=1;
+const move=(e)=>{
+ switch(e.key){
+  case 'ArrowRight':
+     clearInterval(timer2)
+     clearInterval(timer1)
+     clearInterval(timer3)
+     clearInterval(timer4)
+ timer1 = setTimeout(function(){
+  //  應該是加到這裏吧，因爲加完之後才可以繼續走呀
+  const a = parseInt(boxArray[boxArray.length - 1])
+  const b = parseInt(1)
+const re = a+b
+console.log('a='+a)
+console.log('b='+b)
+console.log('re='+re)
+
+if(boxArray.length<6 && (boxArray[boxArray.length])%width!==0){
+  boxArray[boxArray.length]=re
+}
+console.log(boxArray)
+appear()
+
+for (var i =0; i<boxArray.length; i++){
+  console.log('box='+(boxArray[i]+1))
+  console.log('width='+(width-1))
+  console.log('算數='+((boxArray[i] + 1) % (width)))
+boxArray.sort(maternal)
+  if ((boxArray[i]+1)%(width)===0){
+return
+  }
+  remove()
+  console.log(boxArray[i])
+boxArray[i]+=count
+appear()
+boxArray.sort(instinct)
+console.log(boxArray)
+
+}
+  // appear()
+   },100)
+
+   break;
+   case 'ArrowLeft':
+     clearInterval(timer2)
+    clearInterval(timer1)
+    clearInterval(timer3)
+    clearInterval(timer4)
+   timer2= setTimeout(function(){
+    //  boxArray.sort(maternal)
+console.log(boxArray[0] - 1)
+if(boxArray.length<6 && (boxArray[0]%width!==0)){
+  boxArray.unshift(boxArray[0] - 1)
+}
+appear()
+
+    for (var i =0; i<boxArray.length; i++){
+    boxArray.sort(instinct)
+      if ((boxArray[i]) % (width) === 0) {
+        return
+      }
+  remove()
+  console.log('boxArray[i]='+boxArray[i])
+boxArray[i]-=count
+      console.log('boxArray[i]after=' + boxArray[i])
+appear()
+
+
+
+}
+    },100)
+    break;
+    case 'ArrowUp':
+     clearInterval(timer3)
+     clearInterval(timer1)
+     clearInterval(timer2)
+     clearInterval(timer4)
+     timer3= setTimeout(function(){
+
+      if(boxArray.length<6 && boxArray[0]>=24){
+  
+        boxArray[boxArray.length]=boxArray[(boxArray.length-1)]-width
+      }
+      console.log(boxArray)
+appear()
+
+       for (var i = 0; i < boxArray.length; i++) {
+      
+         if(boxArray[i]<=24){
+        return;
+         }
+            remove()
+         boxArray[i] -= width
+
+
+         appear()
+
+
+       }
+     },100)
+     break;
+     case 'ArrowDown':
+       clearInterval(timer4)
+      clearInterval(timer1)
+      clearInterval(timer2)
+      clearInterval(timer3)
+     timer4 = setTimeout(function(){
+
+if (boxArray.length<6 && boxArray[boxArray.length-1]<599){
+
+  boxArray.unshift(boxArray[0] + width)
+}
+appear()
+
+       for (var i = 0; i < boxArray.length; i++) {
+
+        if(boxArray[i]>599){
+          return
+        }
+         remove()
+         console.log(boxArray[i])
+         boxArray[i] += width
+         appear()
+       }
+      },100)
+ }
+}
+
+// 就是要把這個寫到外面才行
+function draw(){
+ for (var i = 0; i < allBoxs.length; i++) {
+ allBoxs[i].style.left = x + 'px'
+ // 都是由本身的位置，每秒向右移動20，雖然我也不知道爲什麽會這樣
+ allBoxs[i].style.top=y+'px'
+ }
+}
+
+function generateRandom (){
+  return Math.floor(Math.random()*625)
+}
+
+
+document.addEventListener('keydown',move)
+const food =()=>{
+  const x =generateRandom()
+indexs[x].classList.add('food')
+
+}
+food()
+
+
+// 頂端是會轉彎的，如果是往上的方向，會突然轉左右
+// 如果是突然往左右的方向，會突然轉上下
+// 在這個情況之下，頂端會增加1，末端會減少1
+
+// 當然前提要有6的情況之下
+
+
+
+</script>
+</html>
