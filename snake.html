@@ -40,6 +40,17 @@ let timer2
 let timer3
 let timer4
 let width = 25
+let upnumber =0
+let upcounting = 1
+let downnumber=0
+let downcounting = 1
+
+let rightnumber=0
+let rightcounting = 1
+let leftnumber=3
+let leftcounting=0
+
+
 // },1000)
 
   function maternal(a, b) {
@@ -54,7 +65,8 @@ for (var i =0; i<625; i++){
   container.appendChild(index)
 }
 const indexs= Array.from(document.querySelectorAll('.container div'))
-const boxArray=[403,404,405,406]
+
+const boxArray=[262,287,312,337]
 function appear(){
 for (var i=0; i<boxArray.length; i++){
 indexs[boxArray[i]].classList.add('box')
@@ -77,37 +89,17 @@ const move=(e)=>{
      clearInterval(timer3)
      clearInterval(timer4)
  timer1 = setTimeout(function(){
-  //  應該是加到這裏吧，因爲加完之後才可以繼續走呀
-  const a = parseInt(boxArray[boxArray.length - 1])
-  const b = parseInt(1)
-const re = a+b
-console.log('a='+a)
-console.log('b='+b)
-console.log('re='+re)
+ const max = Math.max(...boxArray)
+   console.log('max=' + max)
+   if ((max+1) % (width) === 0) {
+     return
+   }
+// 那麽加次序的原因純粹就是爲了能夠確保最大的那個是頂端
+   boxArray.sort(instinct)
+   indexs[boxArray[0]].classList.remove('box')
+   boxArray.splice(0, 1, (boxArray[boxArray.length - 1] + (1 * 1)))
+   appear()
 
-if(boxArray.length<6 && (boxArray[boxArray.length])%width!==0){
-  boxArray[boxArray.length]=re
-}
-console.log(boxArray)
-appear()
-
-for (var i =0; i<boxArray.length; i++){
-  console.log('box='+(boxArray[i]+1))
-  console.log('width='+(width-1))
-  console.log('算數='+((boxArray[i] + 1) % (width)))
-boxArray.sort(maternal)
-  if ((boxArray[i]+1)%(width)===0){
-return
-  }
-  remove()
-  console.log(boxArray[i])
-boxArray[i]+=count
-appear()
-boxArray.sort(instinct)
-console.log(boxArray)
-
-}
-  // appear()
    },100)
 
    break;
@@ -117,28 +109,54 @@ console.log(boxArray)
     clearInterval(timer3)
     clearInterval(timer4)
    timer2= setTimeout(function(){
-    //  boxArray.sort(maternal)
-console.log(boxArray[0] - 1)
-if(boxArray.length<6 && (boxArray[0]%width!==0)){
-  boxArray.unshift(boxArray[0] - 1)
-}
-appear()
-
-    for (var i =0; i<boxArray.length; i++){
-    boxArray.sort(instinct)
-      if ((boxArray[i]) % (width) === 0) {
+const min = Math.min(...boxArray)
+console.log('min='+min)
+      if (min % (width) === 0) {
         return
       }
-  remove()
-  console.log('boxArray[i]='+boxArray[i])
-boxArray[i]-=count
-      console.log('boxArray[i]after=' + boxArray[i])
-appear()
 
 
+     console.log('開頭=' + boxArray)
+
+    
+console.log('goingdown='+goingDown)
+if(goingDown){  
+
+
+    indexs[boxArray[0]].classList.remove('box')
+     boxArray.splice(0, 1, (boxArray[leftnumber] - 1))
+    
+     leftnumber--
+     if(leftnumber<0){
+       leftnumber=3
+     }
+     console.log('number='+leftnumber)
+     appear()
+          boxArray.sort(instinct)
+               console.log('尾巴=' + boxArray)
+               lastnum = []
+               name2()
+               goingDown = name()
+               console.log('尾巴判斷='+lastnum)
+               console.log('對嗎='+goingDown)
+                     console.log('leftnum=' + Leftnum)
+
+    
+} else{
+
+   indexs[boxArray[boxArray.length-1]].classList.remove('box')
+  boxArray.splice(boxArray.length-1, 1, (boxArray[leftcounting] - 1))
+
+  console.log('number=' + leftnumber)
+  appear()
+  boxArray.sort(instinct)
+
+  lastnum = []
+  name2()
+  goingDown = name()
 
 }
-    },100)
+   }, 100)
     break;
     case 'ArrowUp':
      clearInterval(timer3)
@@ -147,26 +165,30 @@ appear()
      clearInterval(timer4)
      timer3= setTimeout(function(){
 
-      if(boxArray.length<6 && boxArray[0]>=24){
-  
-        boxArray[boxArray.length]=boxArray[(boxArray.length-1)]-width
-      }
-      console.log(boxArray)
-appear()
-
-       for (var i = 0; i < boxArray.length; i++) {
-      
-         if(boxArray[i]<=24){
-        return;
-         }
-            remove()
-         boxArray[i] -= width
-
-
-         appear()
-
-
+      const min=Math.min(...boxArray)
+      console.log('min='+min)
+         if (min <= 24) {
+         return;
        }
+
+if(goingDown){
+       indexs[boxArray[boxArray.length-1]].classList.remove('box')
+       boxArray.splice(boxArray.length-1, 1,)
+       boxArray.splice(0,0, (boxArray[0] - (1 * width)))
+       console.log(boxArray)
+       appear()
+          name()
+  goingDown = name()
+  console.log('goingDown'+goingDown)
+}else{
+  indexs[boxArray[0]].classList.remove('box')
+  boxArray.splice(0,1)
+  boxArray.splice((boxArray.length-1),0,(boxArray[boxArray.length-1]-width))
+  appear()
+  name()
+  goingDown=name()
+   console.log('goingDown' + goingDown)
+}
      },100)
      break;
      case 'ArrowDown':
@@ -176,22 +198,45 @@ appear()
       clearInterval(timer3)
      timer4 = setTimeout(function(){
 
-if (boxArray.length<6 && boxArray[boxArray.length-1]<599){
+// 當往下的時候，那麽要怎麽楊才能夠取消上面的鍵盤
+// 而且也不應該設這樣的不是嗎
+// 當一被按鍵的時候，up就會被remove
 
-  boxArray.unshift(boxArray[0] + width)
-}
-appear()
+
+       const max = Math.max(...boxArray)
+       console.log('max='+max)
+       if(max>599){
+         return
+       }
+       indexs[boxArray[downnumber]].classList.remove('box')
+       console.log('0=' + boxArray[downnumber])
+       boxArray.splice(downnumber, 1, (boxArray[boxArray.length - 1] + (downcounting * width)))
+       console.log(boxArray)
+       appear()
+
+       downnumber++
+
+       if (downnumber == 4) {
+         downnumber = 0
+       }
+
+       console.log('number=' + downnumber)
+       downcounting++
+       if (downcounting == 4) {
+         downcounting = 0
+       }
+
 
        for (var i = 0; i < boxArray.length; i++) {
 
-        if(boxArray[i]>599){
-          return
-        }
+      
          remove()
          console.log(boxArray[i])
          boxArray[i] += width
          appear()
+         console.log(boxArray)
        }
+
       },100)
  }
 }
@@ -218,14 +263,120 @@ indexs[x].classList.add('food')
 }
 food()
 
+let lastnum=[]
 
-// 頂端是會轉彎的，如果是往上的方向，會突然轉左右
-// 如果是突然往左右的方向，會突然轉上下
-// 在這個情況之下，頂端會增加1，末端會減少1
+      function name2(){
+  for (var i = 0; i < boxArray.length-1; i++) {
+   
+        const lastnumm = boxArray[i] + width          
+        // 爲什麽只會收到一個數字呢
+        lastnum.push(lastnumm)
 
-// 當然前提要有6的情況之下
+      }
+    }
+   
+
+name2()
+// console.log('lastnum全局='+lastnum)
+console.log('boxArray='+boxArray)
+
+function name (){
+  for (var i=0; i<lastnum.length; i++){
+    const goingdown = boxArray.includes(lastnum[i])
+    return goingdown
+  }
+}
+name()
+let goingDown= name()
+
+let Rightnum=[];
+let Leftnum=[];
+
+        function goinfRightOrLeft() {
+          for (var i = 0; i < boxArray.length - 1; i++) {
+
+            const Rightnumm = boxArray[i] + 1
+          const Leftnumm=boxArray[i]-1
+            Rightnum.push(Rightnumm)
+            Leftnum.push(Leftnumm)
+
+          }
+        }
+        goinfRightOrLeft()
+
+        function goingHorizontal(){
+          for(var i=0; i<Rightnum.length; i++){
+            if (boxArray.includes(Rightnum[i])){
+              return true
+            }
+            for (var i=0; i<Leftnum.length; i++){
+              if(boxArray.includes(Leftnum[i])){
+                return true
+              }
+            }
+          }
+          return false
+
+        }
+        goingHorizontal()
+        let xx = goingHorizontal()
+        console.log(xx)
+        console.log(Leftnum)
+        
 
 
+
+
+  // 該怎麽去判斷呢
+  //  首先一開始應該先要判斷方向
+  // 如果是上下方向的話，就要透過-width或者+width來判斷
+  // 如果是左右方向的話，就要透過+1或減1來進行判斷
+  //在默認的情況的之下，就應該是上下的
+  // 如果一旦含有左的話,則會刪除【0】個
+  // 如果一旦往右的話，也會刪除[0]個
+  // 如果是往上的話，就會刪除[最後一個]，是不能夠往上的
+  // 如果是往下的話，也會刪除[0]個
+
+
+  //應該這麽說，你怎麽樣都要指定一個頭是吧
+  //不然如何判斷為0個，如何判斷為最後一個
+  // 因爲當然向左的時候，最少的就是第一個,如果最少的是第一個
+  // 向右這個方向的時候,頂端則是最多的一個
+  //  還是根本就不要理會
+  // 因爲排在最後一個格仔的,永遠都會是最後一個
+// 如果是這樣的話
+// 我就只會刪除第一個
+// 可是頭也會在增加呀
+//  因爲你增加的話
+//  就會打散了呀
+// 就是要確保增加地永遠都是最後一個後面的
+// 既然是這樣那要該怎麽弄呢
+//  所以我就要弄兩個splice不是嗎
+//  一個就是要刪除一開始的
+//  另外一個就是要在最後一個後面增加
+//  
+
+
+  // 轉彎這一個該怎麽弄呢
+// 一轉彎的時候，
+// 需要判斷方向嗎
+//  這個時候應該就是不需要判斷方向了吧
+//  反正無論轉彎也好，怎麽樣也好，都會刪除第一個，添加最後一個
+// 可是得要弄一個判斷當往上的時候，是不能夠往下的
+//  當往下的時候是不能夠往上的
+// 當往左的時候是不能夠往右的
+//  當往右的時候是不能夠往左的
+// 那要怎麽對這個進行判斷呢
+//  那不成要定義方向嗎
+//  goingRight = true, 如果goingRight =true的話，那麽goingLeft就會是等於false
+// 上下的時候going right and left = true
+// 上下也是一個道理，goingup是true的時候，那麽goingdown就會是false, goingdown是true的時
+// 那麽goingup就會是等於true，除非左右才會使goingup/down都會是等於true 
+// 
+//   
+
+//  
+//  那就是
 
 </script>
 </html>
