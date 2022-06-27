@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
  <meta charset="UTF-8">
  <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,376 +8,256 @@
  <title>snake</title>
  <link rel="stylesheet" href="snake.css">
 </head>
-<!-- 如何使增加自動地走在前面 -->
- <!-- 只要向前/后/左/右移動,前面會增加,後面就會減少, -->
- <!-- 如果遇到有食物的話,就不會移動,食物就會變成蛇的一部分-->
- <!-- 只要撞到四邊的墻,就輸了 -->
- <!-- 只要只要碰到自己的body 就輸了 -->
- <!-- 吃了一個磚頭,就會增加一分 -->
- <!-- 按了按鈕之後就開始或者重新開始 -->
- <!-- 食物會隨時出現 -->
- <!-- 一開始由少變多, 由變成5-->
- <!-- 每一秒就向前移動一格 -->
+
 <body>
  <button class="start">Start/Restart</button>
- <div class="score"></div>
- <!-- 得要container裏面有東西,變成grid才有意義 -->
-<div class="container">
-<!-- 是要一開始就增加,還是最後才增加比較好呢 -->
-
-</div>
-
+ <div>score:<span class="score"></span></div>
+ <div class="container">
+ </div>
 </body>
 <script>
-const start = document.querySelector('.start')
-const score = document.querySelector('.score')
-const container =  document.querySelector('.container')
+ const start = document.querySelector('.start')
+ const score = document.querySelector('.score')
+ const container = document.querySelector('.container')
+ let x = 0
+ let random=20;
+ let y = 0
+ let timer1
+ let timer2
+ let timer3
+ let timer4
+ let width = 25
 
-let x = 0
-// const timer = setInterval(function(){
-let y = 0 
-let timer1 
-let timer2
-let timer3
-let timer4
-let width = 25
-let upnumber =0
-let upcounting = 1
-let downnumber=0
-let downcounting = 1
+ let goingRight=true; 
+ let goingLeft=false
+ let goingUp=true;
+ let goingDown=true;
+ let speedTime;
+let scores=0
+score.innerHTML=scores
 
-let rightnumber=0
-let rightcounting = 1
-let leftnumber=3
-let leftcounting=0
+ start.addEventListener('click',function(){
+   document.addEventListener('keydown', move)
+   scores=0
+   location.reload()
 
+ })
 
-// },1000)
-
-  function maternal(a, b) {
-    return b - a
-  }
-  function instinct(a, b) {
-    return a-b
-  }
-
-for (var i =0; i<625; i++){
+ for (var i = 0; i < 625; i++) {
   const index = document.createElement('div')
   container.appendChild(index)
-}
-const indexs= Array.from(document.querySelectorAll('.container div'))
+ }
+ const indexs = Array.from(document.querySelectorAll('.container div'))
 
-const boxArray=[262,287,312,337]
-function appear(){
-for (var i=0; i<boxArray.length; i++){
-indexs[boxArray[i]].classList.add('box')
-}
-}
-appear()
-function remove(){
-for (var i=0; i<boxArray.length; i++){
-indexs[boxArray[i]].classList.remove('box')
-}
-}
+ const boxArray = [232, 233, 234, 235]
+ function appear() {
+  for (var i = 0; i < boxArray.length; i++) {
+   indexs[boxArray[i]].classList.add('box')
+  }
+ }
+ appear()
 
-  const allBoxs = Array.from(document.querySelectorAll('.box'))
-let count=1;
-const move=(e)=>{
- switch(e.key){
-  case 'ArrowRight':
-     clearInterval(timer2)
-     clearInterval(timer1)
-     clearInterval(timer3)
-     clearInterval(timer4)
- timer1 = setTimeout(function(){
- const max = Math.max(...boxArray)
-   console.log('max=' + max)
-   if ((max+1) % (width) === 0) {
-     return
-   }
-// 那麽加次序的原因純粹就是爲了能夠確保最大的那個是頂端
-   boxArray.sort(instinct)
-   indexs[boxArray[0]].classList.remove('box')
-   boxArray.splice(0, 1, (boxArray[boxArray.length - 1] + (1 * 1)))
-   appear()
-
-   },100)
-
-   break;
-   case 'ArrowLeft':
-     clearInterval(timer2)
+ const allBoxs = Array.from(document.querySelectorAll('.box'))
+ let count = 1;
+ const move = (e) => {
+  switch (e.key) {
+   case 'ArrowRight':
     clearInterval(timer1)
     clearInterval(timer3)
     clearInterval(timer4)
-   timer2= setTimeout(function(){
-const min = Math.min(...boxArray)
-console.log('min='+min)
-      if (min % (width) === 0) {
-        return
-      }
+    speed()
 
+    timer1 = setInterval(function () {
 
-     console.log('開頭=' + boxArray)
+ if(goingRight){
+  goingLeft=false
+  goingDown=true;
+  goingUp=true;
 
-    
-console.log('goingdown='+goingDown)
-if(goingDown){  
+     boxArray.splice(boxArray.length,0,boxArray[boxArray.length-1]+1)
 
-
-    indexs[boxArray[0]].classList.remove('box')
-     boxArray.splice(0, 1, (boxArray[leftnumber] - 1))
-    
-     leftnumber--
-     if(leftnumber<0){
-       leftnumber=3
-     }
-     console.log('number='+leftnumber)
-     appear()
-          boxArray.sort(instinct)
-               console.log('尾巴=' + boxArray)
-               lastnum = []
-               name2()
-               goingDown = name()
-               console.log('尾巴判斷='+lastnum)
-               console.log('對嗎='+goingDown)
-                     console.log('leftnum=' + Leftnum)
-
-    
-} else{
-
-   indexs[boxArray[boxArray.length-1]].classList.remove('box')
-  boxArray.splice(boxArray.length-1, 1, (boxArray[leftcounting] - 1))
-
-  console.log('number=' + leftnumber)
-  appear()
-  boxArray.sort(instinct)
-
-  lastnum = []
-  name2()
-  goingDown = name()
-
-}
-   }, 100)
-    break;
-    case 'ArrowUp':
-     clearInterval(timer3)
+   if (CheckWinLose() || (boxArray[boxArray.length - 1]) % width === 0) {
+     alert('you lose')
+     document.removeEventListener('keydown', move)
      clearInterval(timer1)
-     clearInterval(timer2)
-     clearInterval(timer4)
-     timer3= setTimeout(function(){
+     return
+   }
+        if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')) {
+     actionAfterEat()
+       appear()
+       return;
+   }
+    indexs[boxArray[0]].classList.remove('box')
+   boxArray.splice(0, 1)
+   appear()
 
-      const min=Math.min(...boxArray)
-      console.log('min='+min)
-         if (min <= 24) {
+    }
+    }, speedTime)
+
+    break;
+   case 'ArrowLeft':
+    clearInterval(timer3)
+    clearInterval(timer4)
+    clearInterval(timer2)
+       speed()
+
+    timer2 = setInterval(function () {
+    if ( indexs[boxArray[boxArray.length - 1]].classList.contains('red')){
+        actionAfterEat()
+        return;
+      }
+     if(goingLeft){
+      goingRight=false;
+      goingUp=true;
+      goingDown=true;
+ 
+      boxArray.splice(boxArray.length, 0, boxArray[boxArray.length - 1] - 1)  
+             if(CheckWinLose() || boxArray[boxArray.length-1]%width===24){
+        alert('you lose')
+        document.removeEventListener('keydown', move)
+        clearInterval(timer2)
+        return
+      }    
+      if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')) {
+         actionAfterEat()
+         appear()
+         return;
+       }      
+      indexs[boxArray[0]].classList.remove('box')
+       boxArray.splice(0, 1)
+      appear()
+    
+     }
+    }, speedTime)
+    break;
+
+
+   case 'ArrowUp':
+    clearInterval(timer1)
+    clearInterval(timer2)
+    clearInterval(timer3)
+       speed()
+    timer3 = setInterval(function () {
+        
+      if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')){
+        actionAfterEat()
+        return;
+      }
+     if(goingUp){
+      goingDown=false
+      goingRight=true
+      goingLeft=true
+
+      boxArray.splice(boxArray.length, 0, (boxArray[boxArray.length-1] - width))
+
+        
+       
+       if (CheckWinLose()) {
+         alert('you lose')
+          document.removeEventListener('keydown', move)
+          clearInterval(timer3)
+         return;
+       } 
+           if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')) {
+         actionAfterEat()
+         appear()
          return;
        }
+      indexs[boxArray[0]].classList.remove('box')
+       boxArray.splice(0, 1)
+      appear()
+    }
+    }, speedTime)
+    break;
+   case 'ArrowDown':
+    clearInterval(timer1)
+    clearInterval(timer2)
+    clearInterval(timer4)
+       speed()
 
-if(goingDown){
-       indexs[boxArray[boxArray.length-1]].classList.remove('box')
-       boxArray.splice(boxArray.length-1, 1,)
-       boxArray.splice(0,0, (boxArray[0] - (1 * width)))
-       console.log(boxArray)
-       appear()
-          name()
-  goingDown = name()
-  console.log('goingDown'+goingDown)
-}else{
-  indexs[boxArray[0]].classList.remove('box')
-  boxArray.splice(0,1)
-  boxArray.splice((boxArray.length-1),0,(boxArray[boxArray.length-1]-width))
-  appear()
-  name()
-  goingDown=name()
-   console.log('goingDown' + goingDown)
-}
-     },100)
-     break;
-     case 'ArrowDown':
-       clearInterval(timer4)
-      clearInterval(timer1)
-      clearInterval(timer2)
-      clearInterval(timer3)
-     timer4 = setTimeout(function(){
-
-// 當往下的時候，那麽要怎麽楊才能夠取消上面的鍵盤
-// 而且也不應該設這樣的不是嗎
-// 當一被按鍵的時候，up就會被remove
-
-
-       const max = Math.max(...boxArray)
-       console.log('max='+max)
-       if(max>599){
-         return
-       }
-       indexs[boxArray[downnumber]].classList.remove('box')
-       console.log('0=' + boxArray[downnumber])
-       boxArray.splice(downnumber, 1, (boxArray[boxArray.length - 1] + (downcounting * width)))
-       console.log(boxArray)
-       appear()
-
-       downnumber++
-
-       if (downnumber == 4) {
-         downnumber = 0
-       }
-
-       console.log('number=' + downnumber)
-       downcounting++
-       if (downcounting == 4) {
-         downcounting = 0
-       }
-
-
-       for (var i = 0; i < boxArray.length; i++) {
-
+    timer4 = setInterval(function () {
+console.log('random='+random)
       
-         remove()
-         console.log(boxArray[i])
-         boxArray[i] += width
-         appear()
-         console.log(boxArray)
-       }
+  if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')){
+        actionAfterEat()
+        return;
+      }
 
-      },100)
+if (goingDown){
+ goingUp=false
+ goingLeft=true
+ goingRight=true
+
+ boxArray.splice(boxArray.length, 0, (boxArray[boxArray.length-1] + width))
+
+ if(CheckWinLose()){
+   alert('you lose')
+    document.removeEventListener('keydown', move)
+    clearInterval(timer4)
+   return
  }
-}
 
-// 就是要把這個寫到外面才行
-function draw(){
- for (var i = 0; i < allBoxs.length; i++) {
- allBoxs[i].style.left = x + 'px'
- // 都是由本身的位置，每秒向右移動20，雖然我也不知道爲什麽會這樣
- allBoxs[i].style.top=y+'px'
+ if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')) {
+    actionAfterEat()
+    appear()
+
+    return;
+  }
+ indexs[boxArray[0]].classList.remove('box')
+  boxArray.splice(0, 1)
+     appear()
+    }
+      
+    }, speedTime)
+  }
  }
-}
 
-function generateRandom (){
-  return Math.floor(Math.random()*625)
-}
+ function generateRandom() {
+  return Math.floor(Math.random() * 625)
+ }
 
-
-document.addEventListener('keydown',move)
-const food =()=>{
-  const x =generateRandom()
-indexs[x].classList.add('food')
-
-}
+ const food = () => {
+  random = generateRandom()
+  indexs[random].classList.add('red')
+ }
 food()
 
-let lastnum=[]
 
-      function name2(){
-  for (var i = 0; i < boxArray.length-1; i++) {
-   
-        const lastnumm = boxArray[i] + width          
-        // 爲什麽只會收到一個數字呢
-        lastnum.push(lastnumm)
-
-      }
-    }
-   
-
-name2()
-// console.log('lastnum全局='+lastnum)
-console.log('boxArray='+boxArray)
-
-function name (){
-  for (var i=0; i<lastnum.length; i++){
-    const goingdown = boxArray.includes(lastnum[i])
-    return goingdown
-  }
+function actionAfterEat(){
+    indexs[random].classList.remove('red')
+  scores++
+  score.innerHTML = scores
+  food()
 }
-name()
-let goingDown= name()
 
-let Rightnum=[];
-let Leftnum=[];
+function CheckWinLose(){
+  if ((boxArray[boxArray.length-1] > 624 || boxArray[boxArray.length - 1] < 0) 
+  || (indexs[boxArray[boxArray.length - 1]].classList.contains('box', 'box')))
+  {
+        return true
 
-        function goinfRightOrLeft() {
-          for (var i = 0; i < boxArray.length - 1; i++) {
+  return false
+}
+}
 
-            const Rightnumm = boxArray[i] + 1
-          const Leftnumm=boxArray[i]-1
-            Rightnum.push(Rightnumm)
-            Leftnum.push(Leftnumm)
+function speed(){
+if(scores>=0 && scores<=3){
+  speedTime=100
+  console.log('應該是等於100')
+}else if(scores>3 && scores<=6){
 
-          }
-        }
-        goinfRightOrLeft()
-
-        function goingHorizontal(){
-          for(var i=0; i<Rightnum.length; i++){
-            if (boxArray.includes(Rightnum[i])){
-              return true
-            }
-            for (var i=0; i<Leftnum.length; i++){
-              if(boxArray.includes(Leftnum[i])){
-                return true
-              }
-            }
-          }
-          return false
-
-        }
-        goingHorizontal()
-        let xx = goingHorizontal()
-        console.log(xx)
-        console.log(Leftnum)
-        
+  speedTime=50
+    console.log('應該是等於50')
+}else {
+  scores=30
+}
+}
 
 
+        document.addEventListener('keydown', move)
 
 
-  // 該怎麽去判斷呢
-  //  首先一開始應該先要判斷方向
-  // 如果是上下方向的話，就要透過-width或者+width來判斷
-  // 如果是左右方向的話，就要透過+1或減1來進行判斷
-  //在默認的情況的之下，就應該是上下的
-  // 如果一旦含有左的話,則會刪除【0】個
-  // 如果一旦往右的話，也會刪除[0]個
-  // 如果是往上的話，就會刪除[最後一個]，是不能夠往上的
-  // 如果是往下的話，也會刪除[0]個
-
-
-  //應該這麽說，你怎麽樣都要指定一個頭是吧
-  //不然如何判斷為0個，如何判斷為最後一個
-  // 因爲當然向左的時候，最少的就是第一個,如果最少的是第一個
-  // 向右這個方向的時候,頂端則是最多的一個
-  //  還是根本就不要理會
-  // 因爲排在最後一個格仔的,永遠都會是最後一個
-// 如果是這樣的話
-// 我就只會刪除第一個
-// 可是頭也會在增加呀
-//  因爲你增加的話
-//  就會打散了呀
-// 就是要確保增加地永遠都是最後一個後面的
-// 既然是這樣那要該怎麽弄呢
-//  所以我就要弄兩個splice不是嗎
-//  一個就是要刪除一開始的
-//  另外一個就是要在最後一個後面增加
-//  
-
-
-  // 轉彎這一個該怎麽弄呢
-// 一轉彎的時候，
-// 需要判斷方向嗎
-//  這個時候應該就是不需要判斷方向了吧
-//  反正無論轉彎也好，怎麽樣也好，都會刪除第一個，添加最後一個
-// 可是得要弄一個判斷當往上的時候，是不能夠往下的
-//  當往下的時候是不能夠往上的
-// 當往左的時候是不能夠往右的
-//  當往右的時候是不能夠往左的
-// 那要怎麽對這個進行判斷呢
-//  那不成要定義方向嗎
-//  goingRight = true, 如果goingRight =true的話，那麽goingLeft就會是等於false
-// 上下的時候going right and left = true
-// 上下也是一個道理，goingup是true的時候，那麽goingdown就會是false, goingdown是true的時
-// 那麽goingup就會是等於true，除非左右才會使goingup/down都會是等於true 
-// 
-//   
-
-//  
-//  那就是
 
 </script>
+
 </html>
