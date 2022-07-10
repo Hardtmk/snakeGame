@@ -1,261 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>snake</title>
+    <link rel="stylesheet" href="snake.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>snake</title>
-  <link rel="stylesheet" href="snake.css">
-</head>
+  <body>
+    <button class="start">Start</button>
+    <div class="scores">score:<span class="score"></span></div>
+    <div class="container"></div>
+    <div class="restart">
+      <button class="restartBtn">restart</button>
+    </div>
+    <div id="overlay"></div>
+  </body>
+  <script>
+    const start = document.querySelector('.start');
+    const restart = document.querySelector('.restart');
+    const score = document.querySelector('.score');
+    const container = document.querySelector('.container');
+    let x = 0;
+    let random = 20;
+    let y = 0;
+    let timer1;
+    let timer2;
+    let timer3;
+    let timer4;
+    let width = 25;
+    let goingRight = true;
+    let goingLeft = false;
+    let goingUp = true;
+    let goingDown = true;
+    let speedTime;
+    let scores = 0;
+    score.innerHTML = scores;
 
-<body>
-  <button class="start">Start/Restart</button>
-  <div>score:<span class="score"></span></div>
-  <div class="container">
-  </div>
-</body>
-<script>
-  const start = document.querySelector('.start')
-  const score = document.querySelector('.score')
-  const container = document.querySelector('.container')
-  let x = 0
-  let random = 20;
-  let y = 0
-  let timer1
-  let timer2
-  let timer3
-  let timer4
-  let width = 25
+    start.addEventListener('click', function () {
+      document.addEventListener('keydown', move);
+    });
 
-  let goingRight = true;
-  let goingLeft = false
-  let goingUp = true;
-  let goingDown = true;
-  let speedTime;
-  let scores = 0
-  score.innerHTML = scores
-
-  start.addEventListener('click', function () {
-    document.addEventListener('keydown', move)
-    scores = 0
-    location.reload()
-
-  })
-
-  for (var i = 0; i < 625; i++) {
-    const index = document.createElement('div')
-    container.appendChild(index)
-  }
-  const indexs = Array.from(document.querySelectorAll('.container div'))
-
-  const boxArray = [232, 233, 234, 235]
-
-  function appear() {
-    for (var i = 0; i < boxArray.length; i++) {
-      indexs[boxArray[i]].classList.add('box')
+    for (var i = 0; i < 625; i++) {
+      const index = document.createElement('div');
+      container.appendChild(index);
     }
-  }
-  appear()
+    const indexs = Array.from(document.querySelectorAll('.container div'));
 
-  const allBoxs = Array.from(document.querySelectorAll('.box'))
-  let count = 1;
-  const move = (e) => {
-    switch (e.key) {
-      case 'ArrowRight':
-        clearInterval(timer1)
-        clearInterval(timer3)
-        clearInterval(timer4)
-        speed()
+    const boxArray = [232, 233, 234, 235];
 
-        timer1 = setInterval(function () {
-
-          if (goingRight) {
-            goingLeft = false
-            goingDown = true;
-            goingUp = true;
-
-            boxArray.splice(boxArray.length, 0, boxArray[boxArray.length - 1] + 1)
-
-            if (CheckWinLose() || (boxArray[boxArray.length - 1]) % width === 0) {
-              alert('you lose')
-              document.removeEventListener('keydown', move)
-              clearInterval(timer1)
-              return
-            }
-            if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')) {
-              actionAfterEat()
-              appear()
-              return;
-            }
-            indexs[boxArray[0]].classList.remove('box')
-            boxArray.splice(0, 1)
-            appear()
-
-          }
-        }, speedTime)
-
-        break;
-      case 'ArrowLeft':
-        clearInterval(timer3)
-        clearInterval(timer4)
-        clearInterval(timer2)
-        speed()
-
-        timer2 = setInterval(function () {
-          if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')) {
-            actionAfterEat()
-            return;
-          }
-          if (goingLeft) {
-            goingRight = false;
-            goingUp = true;
-            goingDown = true;
-
-            boxArray.splice(boxArray.length, 0, boxArray[boxArray.length - 1] - 1)
-            if (CheckWinLose() || boxArray[boxArray.length - 1] % width === 24) {
-              alert('you lose')
-              document.removeEventListener('keydown', move)
-              clearInterval(timer2)
-              return
-            }
-            if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')) {
-              actionAfterEat()
-              appear()
-              return;
-            }
-            indexs[boxArray[0]].classList.remove('box')
-            boxArray.splice(0, 1)
-            appear()
-
-          }
-        }, speedTime)
-        break;
-
-
-      case 'ArrowUp':
-        clearInterval(timer1)
-        clearInterval(timer2)
-        clearInterval(timer3)
-        speed()
-        timer3 = setInterval(function () {
-
-          if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')) {
-            actionAfterEat()
-            return;
-          }
-          if (goingUp) {
-            goingDown = false
-            goingRight = true
-            goingLeft = true
-
-            boxArray.splice(boxArray.length, 0, (boxArray[boxArray.length - 1] - width))
-
-
-
-            if (CheckWinLose()) {
-              alert('you lose')
-              document.removeEventListener('keydown', move)
-              clearInterval(timer3)
-              return;
-            }
-            if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')) {
-              actionAfterEat()
-              appear()
-              return;
-            }
-            indexs[boxArray[0]].classList.remove('box')
-            boxArray.splice(0, 1)
-            appear()
-          }
-        }, speedTime)
-        break;
-      case 'ArrowDown':
-        clearInterval(timer1)
-        clearInterval(timer2)
-        clearInterval(timer4)
-        speed()
-
-        timer4 = setInterval(function () {
-          console.log('random=' + random)
-
-          if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')) {
-            actionAfterEat()
-            return;
-          }
-
-          if (goingDown) {
-            goingUp = false
-            goingLeft = true
-            goingRight = true
-
-            boxArray.splice(boxArray.length, 0, (boxArray[boxArray.length - 1] + width))
-
-            if (CheckWinLose()) {
-              alert('you lose')
-              document.removeEventListener('keydown', move)
-              clearInterval(timer4)
-              return
-            }
-
-            if (indexs[boxArray[boxArray.length - 1]].classList.contains('red')) {
-              actionAfterEat()
-              appear()
-
-              return;
-            }
-            indexs[boxArray[0]].classList.remove('box')
-            boxArray.splice(0, 1)
-            appear()
-          }
-
-        }, speedTime)
+    function appear() {
+      for (var i = 0; i < boxArray.length; i++) {
+        indexs[boxArray[i]].classList.add('box');
+      }
     }
-  }
+    appear();
 
-  function generateRandom() {
-    return Math.floor(Math.random() * 625)
-  }
+    const allBoxs = Array.from(document.querySelectorAll('.box'));
+    let count = 1;
+    const move = e => {
+      switch (e.key) {
+        case 'ArrowRight':
+          clearInterval(timer1);
+          clearInterval(timer3);
+          clearInterval(timer4);
+          speed();
 
-  const food = () => {
-    random = generateRandom()
-    indexs[random].classList.add('red')
-  }
-  food()
+          timer1 = setInterval(function () {
+            if (goingRight) {
+              goingLeft = false;
+              goingDown = true;
+              goingUp = true;
 
+              boxArray.splice(
+                boxArray.length,
+                0,
+                boxArray[boxArray.length - 1] + 1
+              );
 
-  function actionAfterEat() {
-    indexs[random].classList.remove('red')
-    scores++
-    score.innerHTML = scores
-    food()
-  }
+              if (
+                CheckWinLose() ||
+                boxArray[boxArray.length - 1] % width === 0
+              ) {
+                document.removeEventListener('keydown', move);
+                clearInterval(timer1);
+                document.body.classList.add('active');
+                overlay.classList.add('active');
+                restart.classList.add('visible');
+                restart.addEventListener('click', function () {
+                  scores = 0;
+                  location.reload();
+                });
+                return;
+              }
+              if (
+                indexs[boxArray[boxArray.length - 1]].classList.contains('red')
+              ) {
+                actionAfterEat();
+                appear();
+                return;
+              }
+              indexs[boxArray[0]].classList.remove('box');
+              boxArray.splice(0, 1);
+              appear();
+            }
+          }, speedTime);
 
-  function CheckWinLose() {
-    if ((boxArray[boxArray.length - 1] > 624 || boxArray[boxArray.length - 1] < 0) ||
-      (indexs[boxArray[boxArray.length - 1]].classList.contains('box', 'box'))) {
-      return true
+          break;
+        case 'ArrowLeft':
+          clearInterval(timer3);
+          clearInterval(timer4);
+          clearInterval(timer2);
+          speed();
 
-      return false
+          timer2 = setInterval(function () {
+            if (
+              indexs[boxArray[boxArray.length - 1]].classList.contains('red')
+            ) {
+              actionAfterEat();
+              return;
+            }
+            if (goingLeft) {
+              goingRight = false;
+              goingUp = true;
+              goingDown = true;
+
+              boxArray.splice(
+                boxArray.length,
+                0,
+                boxArray[boxArray.length - 1] - 1
+              );
+              if (
+                CheckWinLose() ||
+                boxArray[boxArray.length - 1] % width === 24
+              ) {
+                document.removeEventListener('keydown', move);
+                clearInterval(timer2);
+                document.body.classList.add('active');
+                overlay.classList.add('active');
+                restart.classList.add('visible');
+                restart.addEventListener('click', function () {
+                  scores = 0;
+                  location.reload();
+                });
+                return;
+              }
+              if (
+                indexs[boxArray[boxArray.length - 1]].classList.contains('red')
+              ) {
+                actionAfterEat();
+                appear();
+                return;
+              }
+              indexs[boxArray[0]].classList.remove('box');
+              boxArray.splice(0, 1);
+              appear();
+            }
+          }, speedTime);
+          break;
+
+        case 'ArrowUp':
+          clearInterval(timer1);
+          clearInterval(timer2);
+          clearInterval(timer3);
+          speed();
+          timer3 = setInterval(function () {
+            if (
+              indexs[boxArray[boxArray.length - 1]].classList.contains('red')
+            ) {
+              actionAfterEat();
+              return;
+            }
+            if (goingUp) {
+              goingDown = false;
+              goingRight = true;
+              goingLeft = true;
+
+              boxArray.splice(
+                boxArray.length,
+                0,
+                boxArray[boxArray.length - 1] - width
+              );
+
+              if (CheckWinLose()) {
+                document.removeEventListener('keydown', move);
+                clearInterval(timer3);
+                document.body.classList.add('active');
+                overlay.classList.add('active');
+                restart.classList.add('visible');
+                restart.addEventListener('click', function () {
+                  scores = 0;
+                  location.reload();
+                });
+                return;
+              }
+              if (
+                indexs[boxArray[boxArray.length - 1]].classList.contains('red')
+              ) {
+                actionAfterEat();
+                appear();
+                return;
+              }
+              indexs[boxArray[0]].classList.remove('box');
+              boxArray.splice(0, 1);
+              appear();
+            }
+          }, speedTime);
+          break;
+        case 'ArrowDown':
+          clearInterval(timer1);
+          clearInterval(timer2);
+          clearInterval(timer4);
+          speed();
+
+          timer4 = setInterval(function () {
+            console.log('random=' + random);
+
+            if (
+              indexs[boxArray[boxArray.length - 1]].classList.contains('red')
+            ) {
+              actionAfterEat();
+              return;
+            }
+
+            if (goingDown) {
+              goingUp = false;
+              goingLeft = true;
+              goingRight = true;
+
+              boxArray.splice(
+                boxArray.length,
+                0,
+                boxArray[boxArray.length - 1] + width
+              );
+
+              if (CheckWinLose()) {
+                document.removeEventListener('keydown', move);
+                clearInterval(timer4);
+                document.body.classList.add('active');
+                overlay.classList.add('active');
+                restart.classList.add('visible');
+                restart.addEventListener('click', function () {
+                  scores = 0;
+                  location.reload();
+                });
+                return;
+              }
+
+              if (
+                indexs[boxArray[boxArray.length - 1]].classList.contains('red')
+              ) {
+                actionAfterEat();
+                appear();
+
+                return;
+              }
+              indexs[boxArray[0]].classList.remove('box');
+              boxArray.splice(0, 1);
+              appear();
+            }
+          }, speedTime);
+      }
+    };
+
+    function generateRandom() {
+      return Math.floor(Math.random() * 625);
     }
-  }
 
-  function speed() {
-    if (scores >= 0 && scores <= 3) {
-      speedTime = 100
-      console.log('應該是等於100')
-    } else if (scores > 3 && scores <= 6) {
+    const food = () => {
+      random = generateRandom();
+      indexs[random].classList.add('red');
+    };
+    food();
 
-      speedTime = 50
-      console.log('應該是等於50')
-    } else {
-      scores = 30
+    function actionAfterEat() {
+      indexs[random].classList.remove('red');
+      scores++;
+      score.innerHTML = scores;
+      food();
     }
-  }
 
+    function CheckWinLose() {
+      if (
+        boxArray[boxArray.length - 1] > 624 ||
+        boxArray[boxArray.length - 1] < 0 ||
+        indexs[boxArray[boxArray.length - 1]].classList.contains('box', 'box')
+      ) {
+        return true;
 
-  document.addEventListener('keydown', move)
+        return false;
+      }
+    }
 
-</script>
-
+    function speed() {
+      if (scores >= 0 && scores <= 10) {
+        speedTime = 100;
+      } else if (scores > 10 && scores <= 20) {
+        speedTime = 70;
+      } else {
+        scores = 60;
+      }
+    }
+  </script>
 </html>

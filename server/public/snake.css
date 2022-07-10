@@ -3,8 +3,20 @@
   margin: 0;
   padding: 0;
 }
-
-/* 可以將其變成一個九宮格 */
+.scores {
+  color: white;
+  position: absolute;
+}
+.start {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px;
+  font-size: 1em;
+  margin: 10px;
+  box-shadow: 2px 2px 2px grey;
+  border: 1px solid black;
+}
 
 body {
   background-image: url('./jungle.jpg');
@@ -15,20 +27,16 @@ body {
 body::before {
   content: '';
   position: absolute;
-  /* top:0; */
-  /* left:0; */
   width: 100%;
   height: 100%;
   background-color: rgb(0, 0, 0, 0.5);
 }
 
 @media (max-width: 1000px) {
-
   body {
     background-size: 1000px 600px;
     /* Force the image to its minimum width */
   }
-
 }
 
 .container {
@@ -42,6 +50,51 @@ body::before {
   display: grid;
   grid-template-columns: repeat(25, 1fr);
   grid-template-rows: repeat(25, 1fr);
+}
+
+.restart {
+  position: absolute;
+  color: black;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  width: 300px;
+  height: 200px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  font-size: large;
+  /* visibility: hidden; */
+  display: none;
+  border: 2px solid black;
+  transform-origin: center center;
+  animation: toBebig 2s ease-in-out;
+}
+
+@keyframes toBebig {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.restartBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Times New Roman', Times, serif;
+  text-transform: uppercase;
+  padding: 10px;
+  box-shadow: 2px 2px pink;
+}
+.restart.visible {
+  display: flex;
 }
 
 /* .box:first-child{
@@ -64,7 +117,6 @@ position: relative;
   border: 0px solid green;
   position: relative;
   z-index: -1;
-
 }
 
 /*指明全部box都是等於藍色 */
@@ -90,7 +142,6 @@ position: relative;
   background-image: url('mouse-removebg-preview.png');
   background-size: contain;
   /* animation: bounce 1s infinite; */
-
 }
 
 @keyframes bounce {
@@ -103,8 +154,23 @@ position: relative;
   }
 
   100% {
-
     transform: scale(1);
   }
+}
 
+#overlay {
+  position: fixed;
+  opacity: 0;
+  transition: 200ms ease-in-out;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+#overlay.active {
+  opacity: 1;
+  pointer-events: all;
 }
